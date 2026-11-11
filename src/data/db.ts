@@ -5,6 +5,7 @@
 export const db : Guitar[] = [
   {
     id: 1,
+    brand: "Fender",
     name: "Lukather",
     image: "guitarra_01",
     description:
@@ -13,6 +14,7 @@ export const db : Guitar[] = [
   },
   {
     id: 2,
+    brand: "Fender",
     name: "SRV",
     image: "guitarra_02",
     description:
@@ -21,6 +23,7 @@ export const db : Guitar[] = [
   },
   {
     id: 3,
+    brand: "Gibson",
     name: "Borland",
     image: "guitarra_03",
     description:
@@ -29,6 +32,7 @@ export const db : Guitar[] = [
   },
   {
     id: 4,
+    brand: "Gibson",
     name: "VAI",
     image: "guitarra_04",
     description:
@@ -37,6 +41,7 @@ export const db : Guitar[] = [
   },
   {
     id: 5,
+    brand: "Gibson",
     name: "Thompson",
     image: "guitarra_05",
     description:
@@ -45,6 +50,7 @@ export const db : Guitar[] = [
   },
   {
     id: 6,
+    brand: "Gretsch",
     name: "White",
     image: "guitarra_06",
     description:
@@ -53,6 +59,7 @@ export const db : Guitar[] = [
   },
   {
     id: 7,
+    brand: "Gretsch",
     name: "Cobain",
     image: "guitarra_07",
     description:
@@ -61,6 +68,7 @@ export const db : Guitar[] = [
   },
   {
     id: 8,
+    brand: "Gretsch",
     name: "Dale",
     image: "guitarra_08",
     description:
@@ -69,6 +77,7 @@ export const db : Guitar[] = [
   },
   {
     id: 9,
+    brand: "Ibanez",
     name: "Krieger",
     image: "guitarra_09",
     description:
@@ -77,6 +86,7 @@ export const db : Guitar[] = [
   },
   {
     id: 10,
+    brand: "Ibanez",
     name: "Campbell",
     image: "guitarra_10",
     description:
@@ -85,6 +95,7 @@ export const db : Guitar[] = [
   },
   {
     id: 11,
+    brand: "Jackson",
     name: "Reed",
     image: "guitarra_11",
     description:
@@ -93,6 +104,7 @@ export const db : Guitar[] = [
   },
   {
     id: 12,
+    brand: "Jackson",
     name: "Hazel",
     image: "guitarra_12",
     description:

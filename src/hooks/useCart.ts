@@ -1,52 +1,63 @@
-import { useEffect, useState, useMemo } from "react";
-import { db } from "../data/db";
+import { useEffect, useState, useMemo, useCallback } from "react";
+import { getGuitars } from "../api/guitars";
 
 export const useCart = () => {
-  //logiica
-  //const [data] = useState(db); //entre parentesis estado inicial
-  //const [cart, setCart] = useState([]);
+
 
   const initialCart = () => {
-    const localStorageCart = localStorage.getItem("cart"); //se buscar el cart y se guarda en el navegador
+    const localStorageCart = localStorage.getItem("cart"); 
 
     try {
-      //el trii es para que se aplique la functio correctamente
-      const parsed = localStorageCart ? JSON.parse(localStorageCart) : []; //convie la cadena o guarda aun localtoge objto o vacio
-      return Array.isArray(parsed) ? parsed : []; //validamos que sea un [] y si encunetra algo diferente regresa [vacio] para evitar errores
+      const parsed = localStorageCart ? JSON.parse(localStorageCart) : []; 
+      return Array.isArray(parsed) ? parsed : []; 
     } catch (error) {
-      //campuramos el error
-      console.error("Error al leer el carrito de localStorage:", error); //se registra el error y lo muestra en consola
-      localStorage.removeItem("cart"); //elimina la clave dañada o el error
-      return []; //regresa el carrito vacio[]
+      console.error("Error al leer el carrito de localStorage:", error);
+      localStorage.removeItem("cart"); 
+      return []; 
     }
   };
 
-  const [data] = useState(db);
+  const [data, setData] = useState<Guitar[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+
+  const loadGuitars = useCallback(async () => {
+    try {
+      setError("");
+      setData(await getGuitars());
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Error al cargar el catálogo");
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    loadGuitars();
+  }, [loadGuitars]);
 
   const [cart, setCart] = useState(initialCart);
 
   useEffect(() => {
-    //solo recibe cadenas de texto
-    localStorage.setItem("cart", JSON.stringify(cart)); //da formato json
-  }, [cart]); //guarda carrito convertido a string
+    localStorage.setItem("cart", JSON.stringify(cart)); 
+  }, [cart]); 
 
   const MIN_ITEMS = 1;
   const MAX_ITEMS = 5;
 
-  function addToCart(item) {
-    const itemExists = cart.findIndex((guitar) => guitar.id == item.id); //regresa el elemento con el mismo id y regresa el idice
+  function addToCart(item: Guitar) {
+    const itemExists = cart.findIndex((guitar) => guitar.id == item.id); 
     if (itemExists >= 0) {
       if (cart[itemExists].quantity >= MAX_ITEMS) return;
       const updatedCart = [...cart];
       updatedCart[itemExists].quantity++;
       setCart(updatedCart);
     } else {
-      item.quantity = 1;
-      setCart([...cart, item]); //se copia el carrito
+      setCart([...cart, { ...item, quantity: 1 }]); 
     }
   }
 
-  function decreseQuantity(id) {
+  function decreseQuantity(id: number) {
     const updatedCart = cart.map((item) => {
       if (item.id === id && item.quantity > MIN_ITEMS) {
         return {
@@ -58,7 +69,7 @@ export const useCart = () => {
     });
     setCart(updatedCart);
   }
-  function increaseQuantity(id) {
+  function increaseQuantity(id: number) {
     const updatedCart = cart.map((item) => {
       if (item.id === id && item.quantity < MAX_ITEMS) {
         return {
@@ -71,11 +82,11 @@ export const useCart = () => {
     setCart(updatedCart);
   }
 
-  function removeFromCart(id) {
+  function removeFromCart(id: number) {
     setCart((prevCart) => prevCart.filter((guita) => guita.id !== id));
   }
 
-  function clearCart(e) {
+  function clearCart() {
     setCart([]);
   }
 
@@ -88,10 +99,12 @@ export const useCart = () => {
   );
 
   return {
-    //metodos y variables para retornar o compartir
 
     cart,
     data,
+    loading,
+    error,
+    loadGuitars,
     isEmpty,
     cartTotal,
     addToCart,

@@ -1,75 +1,54 @@
-# React + TypeScript + Vite
+# GuitarLA – Frontend (React + TypeScript + Vite)
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Tienda de guitarras en React. El catálogo se lee desde la API del backend (`GET /api/guitars`) y el formulario **Agregar Guitarra** guarda en PostgreSQL (`POST /api/guitars`).
 
-Currently, two official plugins are available:
+## Requisitos
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+- Node.js 18 o superior
+- El **backend** de GuitarLA corriendo (ver `guitarsla-backend/README.md`)
 
-## React Compiler
+## Instalación
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+```bash
+npm install
+```
 
-## Expanding the ESLint configuration
+## Variables de entorno
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+```bash
+ .env.
+VITE_API_URL=http://localhost:4000/api
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+ .env.template
+ VITE_API_URL=http://localhost:4000/api
 
 ```
 
-You can also install [eslint-plugin-react-x](https://npmx.dev/package/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://npmx.dev/package/eslint-plugin-react-dom) for React-specific lint rules:
+| Variable       | Descripción                  | Valor por defecto           |
+| -------------- | ---------------------------- | --------------------------- |
+| `VITE_API_URL` | URL base de la API (backend) | `http://localhost:4000/api` |
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+## Cómo arrancar todo
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+1. **Backend** (en su carpeta): `npm run dev` → `http://localhost:4000`
+2. **Frontend** (en esta carpeta): `npm run dev` → `http://localhost:5173`
 
-```
+Abre `http://localhost:5173`. El origen del frontend debe coincidir con `CORS_ORIGIN` del backend.
+
+## Funcionalidad
+
+- **Catálogo (Read):** `src/hooks/useCart.ts` consume `getGuitars()` (`src/api/guitars.ts`) y muestra estados de carga, error y lista vacía.
+- **Formulario (Create):** `src/components/GuitarForm.tsx` valida en el cliente (campos vacíos, precio no numérico o ≤ 0) antes de llamar a `createGuitar()`; muestra los errores del servidor si los hay y recarga el catálogo al guardar.
+- El carrito sigue funcionando igual que antes (guardado en `localStorage`).
+
+## Pruebas E2E manuales
+
+1. Con ambos servidores arriba, el catálogo muestra las guitarras de la base de datos (si está vacía, corre `npm run seed` en el backend).
+2. Envía el formulario vacío → aparecen mensajes de error y no hay petición.
+3. Precio `-5` → error "El precio debe ser mayor a 0".
+4. Datos válidos → mensaje de éxito y la guitarra aparece en el catálogo.
+5. Revisa que no haya errores en la consola del navegador ni en la del servidor.
+
+## Scripts
+
+`npm run dev` · `npm run build` · `npm run lint` · `npm run preview`

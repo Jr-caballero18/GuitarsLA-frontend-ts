@@ -1,5 +1,6 @@
 type Guitar = {
   id: number;
+  brand: string;
   name: string;
   image: string;
   description: string;
@@ -19,6 +20,14 @@ type CartProp ={
   increaseQuantity:(item:number)=> void,
   removeFromCart:(item:number)=> void,
   clearCart:()=> void,
-  isEmpty:number,
+  isEmpty:boolean,
   cartTotal:number,
 }
+
+type GuitarInput = {
+  brand: string;
+  name: string;
+  image: string;
+  description: string;
+  price: number;
+};
